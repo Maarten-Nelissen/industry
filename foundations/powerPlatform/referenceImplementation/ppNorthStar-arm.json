@@ -1,8 +1,3 @@
-/*
-    North Star Architecture for Power Platform ARM template.
-    This template will in concert with the portal extension provision and bootstrap 1) Azure infrastructure as prerequisite for monitoring, logging, and security,
-    and the initial Admin environments for Power Platform, to construct and operationalize landing zones for citizen - and professional developers.
-*/
 {
     "$schema": "https://schema.management.azure.com/schemas/2018-05-01/subscriptionDeploymentTemplate.json#",
     "contentVersion": "1.0.0.0",
@@ -182,14 +177,14 @@
         "ppCitizenCount": {
             "type": "int",
             "maxValue": 200,
-            "defaultValue": 1,
+            "defaultValue": 3,
             "metadata": {
                 "description": "Select how many environments for citizen dev to be created."
             }
         },
         "ppCitizenNaming": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "CitizenDevelopers",
             "metadata": {
                 "description": "Provide naming convention for the citizen dev environments."
             }
@@ -474,7 +469,7 @@
         },
         "ppCitizenConfiguration": {
             "type": "string",
-            "defaulValue": "",
+            "defaultValue": "",
             "metadata": {
                 "description": "Provide strings for custom citizen Environment creation."
             }
@@ -488,14 +483,14 @@
         },
         "ppCitizenLanguage": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "1043",
             "metadata": {
                 "description": "Select language for the environments."
             }
         },
         "ppCitizenCurrency": {
             "type": "string",
-            "defaultValue": "",
+            "defaultValue": "eur",
             "metadata": {
                 "description": "Select the currency for the environments."
             }
@@ -531,15 +526,15 @@
     },
     "variables": {
         "deploymentUris": {
-            "ppRpRegistrationTemplateUri": "[uri(deployment().properties.templateLink.uri, 'auxiliary/powerPlatform/rpRegistrations.json')]",
-            "logAnalyticsTemplateUri": "[uri(deployment().properties.templateLink.uri, 'auxiliary/azureMonitor/logAnalytics.json')]",
-            "aadDiagnosticsTemplateUri": "[uri(deployment().properties.templateLink.uri, 'auxiliary/azureMonitor/aadDiagnostics.json')]",
-            "dataLakeTemplateUri": "[uri(deployment().properties.templateLink.uri, 'auxiliary/azureMonitor/storageAccountV2.json')]",
-            "securityTemplateUri": "[uri(deployment().properties.templateLink.uri, 'auxiliary/azureMonitor/security.json')]",
-            "northStarTemplateUri": "[uri(deployment().properties.templateLink.uri, 'auxiliary/powerPlatform/ppDeploymentScript.json')]"
+            "ppRpRegistrationTemplateUri": "https://raw.githubusercontent.com/microsoft/industry/main/foundations/powerPlatform/referenceImplementation/auxiliary/powerPlatform/rpRegistrations.json",
+            "logAnalyticsTemplateUri": "https://raw.githubusercontent.com/microsoft/industry/main/foundations/powerPlatform/referenceImplementation/auxiliary/azureMonitor/logAnalytics.json",
+            "aadDiagnosticsTemplateUri": "https://raw.githubusercontent.com/microsoft/industry/main/foundations/powerPlatform/referenceImplementation/auxiliary/azureMonitor/aadDiagnostics.json",
+            "dataLakeTemplateUri": "https://raw.githubusercontent.com/microsoft/industry/main/foundations/powerPlatform/referenceImplementation/auxiliary/azureMonitor/storageAccountV2.json",
+            "securityTemplateUri": "https://raw.githubusercontent.com/microsoft/industry/main/foundations/powerPlatform/referenceImplementation/auxiliary/azureMonitor/security.json",
+            "northStarTemplateUri": "https://raw.githubusercontent.com/Maarten-Nelissen/industry/main/foundations/powerPlatform/referenceImplementation/auxiliary/powerPlatform/ppDeploymentScript.json"
         },
-        "deploymentNamePrefix": "[concat(replace(tenant().displayName, ' ', ''), '-')]",
-        "deploymentNameSuffix": "[concat('-', deployment().location, guid(parameters('ppAdminEnvNaming')))]",
+        "deploymentNamePrefix": "[concat(replace(replace(tenant().displayName, ' ', ''), '/', ''), '-')]",
+		"deploymentNameSuffix": "[concat('-', deployment().location, guid(parameters('ppAdminEnvNaming')))]",
         "deploymentNames": {
             "ppRegistrationDeploymentName": "[take(concat(variables('deploymentNamePrefix'), 'North-Star-RP-Billing', variables('deploymentNameSuffix')), 64)]",
             "logAnalyticsDeploymentName": "[take(concat(variables('deploymentNamePrefix'), 'North-Star-Azure-Monitoring', variables('deploymentNameSuffix')), 64)]",
@@ -554,7 +549,6 @@
             "billingRg": "[concat(variables('resourceNamePrefix'), '-billing-', parameters('location'))]",
             "analyticsRg": "[concat(variables('resourceNamePrefix'), '-analytics-', parameters('location'))]"
             },
-        // Declaring deterministic names for platform resources that will be created
         "resourceNames": {
             "logAnalyticsWorkspace": "[concat(variables('resourceNamePrefix'), '-law-', parameters('location'))]",
             "automationAccount": "[concat(variables('resourceNamePrefix'), '-aauto-', parameters('location'))]",
@@ -567,7 +561,6 @@
     },
     "resources": [
         {
-            // Deploying the North Star Power Platform script
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
             "name": "[variables('deploymentNames').northStarDeploymentName]",
@@ -715,7 +708,6 @@
             }
         },
         {
-            // Create Data Lake Storage V2 for Power Platform tenant analytics
             "condition": "[equals(parameters('ppEnableDataLake'), 'yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -741,7 +733,6 @@
             }
         },
         {
-            // Register the Power Platform 'accounts' resource type if the condition is met, and create the billing object into a new resource group.
             "condition": "[equals(parameters('ppAdminBilling'), 'yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",
@@ -767,7 +758,6 @@
             }
         },
         {
-            // Create Azure Monitor infrastructure for security and observability
             "condition": "[equals(parameters('ppEnableAzureMonitor'), 'yes')]",
             "type": "Microsoft.Resources/deployments",
             "apiVersion": "2020-10-01",

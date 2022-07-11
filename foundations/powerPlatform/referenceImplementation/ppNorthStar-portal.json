@@ -940,6 +940,9 @@
                                         "value": "yes"
                                     },
                                     {
+                                        "label": "Yes, without dataverse",
+                                        "value": "half"
+                                    },                                    {
                                         "label": "Yes, and let me configure each Environment",
                                         "value": "custom"
                                     },
@@ -1757,27 +1760,27 @@
                             "max": 10,
                             "label": "Number of Environments for citizen developers to be created",
                             "subLabel": "Environments",
-                            "defaultValue": 1,
+                            "defaultValue": 3,
                             "showStepMarkers": false,
                             "toolTip": "Select how many Environments you will create for citizen developers.",
                             "constraints": {
                                 "required": false
                             },
-                            "visible": "[equals(steps('landingZones').ppCitizen, 'yes')]"
+                            "visible": "[or(equals(steps('landingZones').ppCitizen, 'yes'), equals(steps('landingZones').ppCitizen, 'half'))]"
                         },
                         {
                             "name": "ppCitizenNaming",
                             "type": "Microsoft.Common.TextBox",
                             "label": "Provide naming convention for the citizen developers environments",
                             "placeholder": "",
-                            "defaultValue": "",
+                            "defaultValue": "CitizenDevelopers",
                             "toolTip": "Use only allowed characters",
                             "constraints": {
                                 "required": true,
                                 "regex": "^[a-z0-9A-Z]{1,30}$",
                                 "validationMessage": "Only alphanumeric characters are allowed, and the value must be 1-30 characters long."
                             },
-                            "visible": "[equals(steps('landingZones').ppCitizen, 'yes')]"
+                            "visible": "[or(equals(steps('landingZones').ppCitizen, 'yes'), equals(steps('landingZones').ppCitizen, 'half'))]"
                         },
                         {
                             "name": "ppCitizenDescription",
@@ -1790,17 +1793,17 @@
                                 "required": false,
                                 "regex": "^[a-z0-9A-Z]{1,30}$"
                             },
-                            "visible": "[equals(steps('landingZones').ppCitizen, 'yes')]"
+                            "visible": "[or(equals(steps('landingZones').ppCitizen, 'yes'), equals(steps('landingZones').ppCitizen, 'half'))]"
                         },
                         {
                             "name": "ppCitizenRegion",
                             "type": "Microsoft.Common.DropDown",
                             "label": "Select region for the new Environments for citizen developers",
                             "placeholder": "",
-                            "defaultValue": "",
+                            "defaultValue": "europe",
                             "toolTip": "",
                             "filter": true,
-                            "visible": "[equals(steps('landingZones').ppCitizen, 'yes')]",
+                            "visible": "[or(equals(steps('landingZones').ppCitizen, 'yes'), equals(steps('landingZones').ppCitizen, 'half'))]",
                             "constraints": {
                                 "allowedValues": [
                                     {
@@ -1856,10 +1859,10 @@
                             "type": "Microsoft.Common.DropDown",
                             "label": "Select language for the new Environments for citizen developers",
                             "placeholder": "",
-                            "defaultValue": "",
+                            "defaultValue": "English (United States)",
                             "toolTip": "",
                             "filter": true,
-                            "visible": "[equals(steps('landingZones').ppCitizen, 'yes')]",
+                            "visible": "[or(equals(steps('landingZones').ppCitizen, 'yes'), equals(steps('landingZones').ppCitizen, 'half'))]",
                             "constraints": {
                                 "allowedValues": [
                                     {
@@ -2051,10 +2054,10 @@
                             "type": "Microsoft.Common.DropDown",
                             "label": "Select currency for the new Environments for professional developers",
                             "placeholder": "",
-                            "defaultValue": "",
+                            "defaultValue": "eur",
                             "toolTip": "",
                             "filter": true,
-                            "visible": "[equals(steps('landingZones').ppCitizen, 'yes')]",
+                            "visible": "[or(equals(steps('landingZones').ppCitizen, 'yes'), equals(steps('landingZones').ppCitizen, 'half'))]",
                             "constraints": {
                                 "allowedValues": [
                                     {
